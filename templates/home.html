@@ -1,0 +1,153 @@
+  {% extends "enbo.html" %}
+  {%block title%}所有记录{%end%}
+
+{%block body%}
+  <div class="container">
+
+
+<div class="field">
+  <label class="label">订单编号</label>
+  <p class="control">
+    <input class="input" type="text" name="txt_order" id="txt_order" placeholder="扫码这里">
+  </p>
+</div>
+
+<div class="field">
+  <label class="label">货品数量:</label>
+  <p class="control">
+    <input class="input" type="text" name="product_num" id="product_num" placeholder="">
+  </p>
+</div>
+
+<div class="field">
+  <label class="label">错发数量:</label>
+  <p class="control">
+    <input class="input" type="text" name="err_num" id="err_num" placeholder="">
+  </p>
+</div>
+
+<div class="field">
+  <label class="label">拣货员工</label>
+  <p class="control">
+    <span class="select">
+      <select name="txt_staff_jh" id="txt_staff_jh">
+        <option value="0">请选择拣货员工</option>
+    {%for item in staff_jhuo%}
+        <option value="{{item.f_email}}">{{item.f_code}}-{{item.f_email}} </option>
+        {%end%}
+      </select>
+    </span>
+  </p>
+</div>
+
+
+
+
+<div class="field is-grouped">
+  <p class="control">
+    <button class="button is-primary" id="btn_save">保存</button>
+
+  </p>
+
+</div>
+{%if showmsg%}
+<div class="notification" id="show_msg">
+  <button class="delete"></button>
+    {{showmsg}}
+</div>
+{%end%}
+<script type="text/javascript">
+  $(function(){
+    $("#txt_order").focus();
+
+    $("#btn_save").on("click",function(){
+        txt_order = $("#txt_order").val()
+        txt_staff_jh = $("#txt_staff_jh").val()
+        err_num = $("#err_num").val();
+        product_num = $("#product_num").val()
+        if (txt_order==""){
+          alert("订单不能为空哦.")
+          return false;
+        }
+
+        if (txt_staff_jh=="0"){
+          alert("拣货员工要选择哦")
+          return false
+        }
+
+        if (product_num==""){
+          alert("货品数量不能为空哦")
+          return false
+        }
+        if ( $.isNumeric(product_num)==false)
+        {
+             alert("货品数量须为数字哦")
+            return false
+        }
+        if (err_num==""){
+          alert("错发数量不能为空哦")
+          return false
+        }
+       if ( $.isNumeric(err_num)==false)
+        {
+             alert("错发数量须为数字哦")
+            return false
+        }
+          $.post("/",{"txt_order":txt_order,"txt_staff_jh":txt_staff_jh,"err_num":err_num,"product_num":product_num},function(result ){
+            msg ="订单号:"+ txt_order+","+result
+            location.href="/?showmsg="+msg
+
+              $("#show_msg").text(result)
+        })
+
+
+    })
+  })
+
+</script>
+
+  <table class="table">
+  <thead>
+    <tr>
+      <th><abbr title="订单编号">订单编号</abbr></th>
+
+      <th><abbr title="拣货员工">拣货员工</abbr></th>
+      <th><abbr title="货品数量">货品数量</abbr></th>
+      <th><abbr title="错发数量">错发数量</abbr></th>
+      <th><abbr title="Won">添加时间</abbr></th>
+        <th><abbr title="Won">最后更新</abbr></th>
+
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th><abbr title="订单编号">订单编号</abbr></th>
+      <th><abbr title="拣货员工">拣货员工</abbr></th>
+            <th><abbr title="货品数量">货品数量</abbr></th>
+
+      <th><abbr title="错发数量">错发数量</abbr></th>
+      <th><abbr title="Won">添加时间</abbr></th>
+       <th><abbr title="Won">最后更新</abbr></th>
+    </tr>
+  </tfoot>
+  <tbody>
+  {%for item in data_order%}
+    <tr>
+      <th>{{item.txt_order}}</th>
+      <td> {{item.txt_staff_jh}}
+      </td>
+                  <td>{{item.product_num}}</td>
+
+      <td>{{item.err_num}}</td>
+      <td>{{item.created_at}}</td>
+      <td>{{item.try_updated}}</td>
+
+
+    </tr>
+    {%end%}
+  </tbody>
+</table>
+</div>
+
+
+{%end%}

@@ -1,0 +1,113 @@
+  {% extends "admin.html" %}
+  {%block title%}所有记录{%end%}
+
+{%block body%}
+
+
+
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->
+
+    <section>
+      <div class="page-header">
+        <h3></h3>
+
+        <div class="row">
+          <div class="span3">
+            <h3>
+                                实时数据统计1</h3>
+          </div>
+          <div class="span9">
+            <form id="form_query">
+
+              开始:<input type="start" id="start" placeholder="" value="{{start}}" name="curr_url" >
+              结束:<input type="end" id="end" placeholder="" value="{{end}}" name="curr_url" >
+           <input type="input" id="curr_url" placeholder="当前地址/IP" value="{{curr_url}}" name="curr_url" > <button class="btn btn-info" id="btn_search" name="btn_search">查询</button>
+        <a href="?curr_url=bd">只看百度</a>
+          </form>
+
+           <script type="text/javascript">
+             $(function(){
+
+              // $.get("https://i.ji-zhang.com/app/get_gongsi_ming/",{},function(result){
+              //   alert(result)
+              // })
+              $("#form_query").on("submit",function(){
+                curr_url =   $("#curr_url").val()
+                if (curr_url==""){
+                  alert("要输入关键词哦.")
+                  return false
+                }
+              })
+
+
+             })
+
+           </script>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+  <table class="table">
+  <thead>
+    <tr>
+     <th><abbr title="访问时间">访问时间</abbr></th>
+          <th ><abbr title="来源地址">设备</abbr></th>
+     <th><abbr title="来源地址">访问来源</abbr></th>
+      <th><abbr title="IP">访问IP</abbr></th>
+     <th><abbr title="当前地址">来源关键词</abbr></th>
+      <th><abbr title="当前地址">当前地址</abbr></th>
+       <th><abbr title="当前地址">来源地址</abbr></th>
+
+
+    </tr>
+  </thead>
+
+  <tbody>
+  {%for item in data_order%}
+    <tr>
+    <td width="150">{{item.created_at}}</td>
+         <td  width="150">{{getclient(item.ua)}}</td>
+
+         <td  width="150">{%if item.source_from==":///"%} 无 {%else%}{{item.source_from}}{%end%}</td>
+    <td width="150"><a href="/show?curr_url={{item.ip}}">{{item.ip}}</a></td>
+    <td width="150">{%if item.keyword%} {{item.keyword}} {%else%}{{getkeyword(item.ref)}}{%end%}</td>
+      <td  width="150"> {{item.curr_url}}</td>
+  <td  width="150"> {{item.ref}}</td>
+
+
+
+
+    </tr>
+    {%end%}
+  </tbody>
+</table>
+<nav class="pagination">
+ {% if pagination.has_prev %} <li><a href="/show?page={{ pagination.page - 1}}{%if curr_url%}&curr_url={{curr_url}}{%end%}"  class="pagination-previous">&laquo; 上页</a></li> {% end %}
+ <ul class="pagination-list">
+{% for page in pagination.iter_pages() %}
+    {% if page %}
+    {% if page != pagination.page %}
+   <li  class="pagination-link">
+    <a href="/show?page={{ page }}{%if curr_url%}&curr_url={{curr_url}}{%end%}">{{ page }}</a></li>
+    {% else %}
+      <li  class="pagination-link"> <a href="#">{{ page }}</a></li>
+    {% end %}
+    {% else %}
+     <li  class="pagination-link"> <a href="#">&hellip;</a></li>
+    {% end %}
+    {% end %}
+    {% if pagination.has_next %}
+        <li><a class="pagination-next" href="/show?page={{ pagination.page + 1}}{%if curr_url%}&curr_url={{curr_url}}{%end%}">下页 &raquo;</a></li>
+    {% end %}
+      </ul>
+</nav>
+        </div>
+      </div>
+    </section>
+  </div>
+
+{%end%}

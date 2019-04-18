@@ -1,0 +1,109 @@
+  {% extends "admin.html" %}
+  {%block title%}{%end%}
+  {% block body %}
+
+<div class="container-fluid">
+<!-- Button to trigger modal -->
+  <br/>
+        <div class="page-header">
+          <h3>mo注册统计</h3>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span12">
+
+
+
+  <br/>
+  <form method="get">
+    <input class="input" name="start" type="text" placeholder="开始时间" value="{{start}}">     <input class="input" name="end" type="text" placeholder="结束时间" value="{{end}}">
+    <input type="hidden" value="mreg" name="tag"/>
+    <input type="submit" value="查询" class="button">
+
+</form>
+<h3>
+   合计: {{total.count}} 成功:{{total1.count}} 失败:{{total2.count}}</h3>
+  <br/>
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                     <th  width="50">设备名</th>
+                      <th width="150">注册成功数</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {%for item in ok_data_total%}
+<tr >
+
+                      <td>
+                    {{item.uid}}
+                      </td>
+                        <td>
+                        {{item.count}}
+                      </td>
+                    </tr>
+                    {%end%}
+
+                  </tbody>
+                </table>
+  <br/>
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                     <th  width="50">设备名</th>
+                      <th width="150">注册失败数</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {%for item in fail_data_total%}
+<tr >
+
+                      <td>
+                    {{item.uid}}
+                      </td>
+                        <td>
+                        {{item.count}}
+                      </td>
+                    </tr>
+                    {%end%}
+
+                  </tbody>
+                </table>
+
+
+                  <br/>
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                     <th  width="50">设备名</th>
+                      <th width="150">可用待注册帐户</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {%for item in wait_data_total%}
+<tr >
+
+                      <td>
+                    {{item.uid}}
+                      </td>
+                        <td>
+                        {{item.count}}
+                      </td>
+                    </tr>
+                    {%end%}
+
+                  </tbody>
+                </table>
+
+
+
+
+
+
+{%end%}

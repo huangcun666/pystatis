@@ -1,0 +1,101 @@
+  {% extends "enbo.html" %}
+  {%block title%}所有记录{%end%}
+
+{%block body%}
+
+<script type="text/javascript">
+  $(function(){
+$("#product_num").focus()
+    $("#form_search").on("submit",function(){
+        product_num = $("#txt_order").val()
+        if(txt_order==""){
+          alert("要输入订单编号哦.")
+          return false
+        }
+
+
+    })
+  })
+
+</script>
+  <form method="get" id="form_search">
+<div class="field">
+  <label class="label">拣货员工</label>
+  <p class="control">
+    <span class="select">
+    <input class="input" type="text" name="txt_order" value="{{txt_order}}" id="txt_order" placeholder="订单编号" style="width: 400px">
+</span>
+     <span class="select">
+      <select name="uid" id="uid">
+      <option value="n">发货员工</option>
+    {%for item in staff_fhuo%}
+
+        <option value="{{item.f_email}}" {%if item.f_email==uid%}selected{%end%}>{{item.f_code}}-{{item.f_email}} </option>
+        {%end%}
+      </select>
+    </span>
+
+    <span class="select">
+      <select name="txt_staff_jh" id="txt_staff_jh">
+      <option value="n">拣货员工</option>
+    {%for item in staff_jhuo%}
+        <option value="{{item.f_email}}" {%if item.f_email==txt_staff_jh%}selected{%end%}>{{item.f_code}}-{{item.f_email}} </option>
+        {%end%}
+      </select>
+    </span><input type="submit" value="查询" class="button">
+  </p>
+</div>
+</form>
+
+
+  <table class="table">
+  <thead>
+    <tr>
+      <th><abbr title="订单编号">订单编号</abbr></th>
+     <th><abbr title="拣货员工">发货员工</abbr></th>
+      <th><abbr title="拣货员工">拣货员工</abbr></th>
+            <th><abbr title="货品数量">货品数量</abbr></th>
+
+      <th><abbr title="错发数量">错发数量</abbr></th>
+      <th><abbr title="Won">添加时间</abbr></th>
+        <th><abbr title="Won">最后更新</abbr></th>
+
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th><abbr title="订单编号">订单编号</abbr></th>
+          <th><abbr title="拣货员工">发货员工</abbr></th>
+      <th><abbr title="拣货员工">拣货员工</abbr></th>
+                  <th><abbr title="货品数量">货品数量</abbr></th>
+
+      <th><abbr title="错发数量">错发数量</abbr></th>
+      <th><abbr title="Won">添加时间</abbr></th>
+       <th><abbr title="Won">最后更新</abbr></th>
+    </tr>
+  </tfoot>
+  <tbody>
+  {%for item in data_order%}
+    <tr>
+      <th>{{item.txt_order}}</th>
+            <td> {{item.uid}}
+      </td>
+      <td> {{item.txt_staff_jh}}
+      </td>
+                        <td>{{item.product_num}}</td>
+
+      <td>{{item.err_num}}</td>
+      <td>{{item.created_at}}</td>
+      <td>{{item.try_updated}}</td>
+
+
+    </tr>
+    {%end%}
+  </tbody>
+</table>
+
+{% include 'page.html' %}
+
+
+
+{%end%}

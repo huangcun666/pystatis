@@ -1,0 +1,61 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>核单系统</title>
+	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-responsive.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+	<script type="text/javascript" src="/static/css/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="/static/css/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/css/main.js"></script>
+	<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+    	body{background:url(/static/css/grass.jpg) repeat-x 0 0;}
+    </style>
+</head>
+<body>
+	<div class="container-fluid">
+
+		<div class="row-fluid">
+<br/><br/><br/><br/><br/><br/>
+
+			<div class="span4"></div>
+			<div class="span4 ">
+				<div class="container-fluid m-login-container">
+					<div class="page-header">
+						登 录</small></h2>
+					</div>
+
+					<form class="form-horizontal" action="/login" method="post">
+						<label></label>
+						<input type="text" placeholder="您的帐户" class="span12" name="username">
+						<label></label>
+						<input type="password" placeholder="您的密码" class="span12" id="input01" name="password">
+
+			            <button type="submit" style="margin-top: 15px" class="btn btn-primary">	登录</button>
+						  {% module xsrf_form_html() %}
+
+					</form>
+
+						{%if error%}
+						<p>
+						 <div class="alert fade in">
+						            <button type="button" class="close" data-dismiss="alert">&times;</button>
+						            <strong>{{error}} </strong>
+						          </div>
+						</p>
+						{%end%}
+				</div>
+
+			</div>
+
+
+		</div>
+
+	</div>
+</body>
+</html>

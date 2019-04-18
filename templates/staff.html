@@ -1,0 +1,191 @@
+  {% extends "enbo.html" %}
+  {%block title%}所有记录{%end%}
+
+{%block body%}
+  <div class="container">
+
+
+<div class="field">
+  <label class="label">登录名</label>
+  <p class="control">
+    <input class="input" type="text" name="f_email" id="f_email" placeholder="中文名字">
+  </p>
+</div>
+
+<div class="field">
+  <label class="label">员工编号</label>
+  <p class="control">
+    <input class="input" type="text" name="f_code" id="f_code" placeholder="自定编号">
+  </p>
+</div>
+
+
+<div class="field">
+  <label class="label">密 码</label>
+  <p class="control">
+    <input class="input" type="text" name="f_pass" id="f_pass" placeholder="登录密码" value="123456">
+  </p>
+</div>
+
+
+<div class="field">
+  <label class="label">拣货员工</label>
+  <p class="control">
+    <span class="select">
+      <select name="f_dep" id="f_dep">
+            <option id="拣货部">拣货部</option>
+            <option id="对单部">对单部</option>
+      </select>
+    </span>
+  </p>
+</div>
+
+
+<div class="field is-grouped">
+  <p class="control">
+    <button class="button is-primary" id="btn_save">保存</button>
+
+  </p>
+
+</div>
+{%if showmsg%}
+<div class="notification" id="show_msg">
+  <button class="delete"></button>
+    {{showmsg}}
+</div>
+{%end%}
+<script type="text/javascript">
+	$(function(){
+		$("#f_email").focus();
+
+		$("#btn_save").on("click",function(){
+
+
+				f_email = $("#f_email").val()
+        f_code = $("#f_code").val()
+        f_pass = $("#f_pass").val()
+         f_dep = $("#f_dep").val()
+
+				if (f_email==""){
+					alert("登录名不能为空哦.")
+				 	return false;
+				}
+				if (f_code==""){
+					alert("编号不能为空哦")
+					return false
+				}
+				if (f_pass==""){
+					alert("密码不能为空哦")
+					return false
+				}
+        if (f_dep==""){
+          alert("部门不能为空哦")
+          return false
+        }
+
+					$.post("/staff",{"f_email":f_email,"f_code":f_code,"f_pass":f_pass,"tag":"add","f_dep":f_dep},function(result){
+            alert(result)
+            location.reload()
+
+				})
+
+
+		})
+	})
+
+</script>
+
+  <table class="table">
+  <thead>
+    <tr>
+      <th><abbr title="订单编号">登录名</abbr></th>
+      <th><abbr title="错发数量">部门</abbr></th>
+      <th><abbr title="Won">员工编号</abbr></th>
+       <th><abbr title="Won">密码</abbr></th>
+        <th><abbr title="拣货员工">创建时间</abbr></th>
+                   <th><abbr title="隐藏">隐藏状态</abbr></th>
+
+    <th>操 作</th>
+
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th><abbr title="订单编号">登录名</abbr></th>
+      <th><abbr title="错发数量">部门</abbr></th>
+      <th><abbr title="Won">员工编号</abbr></th>
+       <th><abbr title="Won">密码</abbr></th>
+        <th><abbr title="拣货员工">创建时间</abbr></th>
+                   <th><abbr title="隐藏">隐藏状态</abbr></th>
+
+    <th>操 作</th>
+    </tr>
+  </tfoot>
+  <tbody>
+  {%for item in t_users%}
+    <tr>
+      <th>{{item.f_email}}</th>
+      <td>{{item.f_dep}}</td>
+      <td>{{item.f_code}}</td>
+      <td>{{item.f_pass}}</td>
+      <td> {{item.f_addtime}}</td>
+   <td> {%if item.f_del==1%} 隐藏 {%else%} 显示 {%end%}</td>
+
+          <td>
+
+          {%if item.f_del==0%}
+           <a href="javascript:void(0)" title="{{item.f_id}}" name="a_del" value="{{item.f_del}}" class="button">隐藏</a>
+
+          {%else%}
+             <a href="javascript:void(0)" title="{{item.f_id}}" name="a_del" value="{{item.f_del}}" class="button is-success is-outlined">显示</a>
+          {%end %}
+
+           </td>
+
+    </tr>
+    {%end%}
+  </tbody>
+</table>
+
+<nav class="pagination is-right">
+ {% if pagination.has_prev %} <li><a href="/staff?page={{ pagination.page - 1}}"  class="pagination-previous">&laquo; 上页</a></li> {% end %}
+ <ul class="pagination-list">
+{% for page in pagination.iter_pages() %}
+    {% if page %}
+    {% if page != pagination.page %}
+        <li  class="pagination-link">
+    <a href="/staff?page={{ page }}">{{ page }}</a></li>
+    {% else %}
+      <li  class="pagination-link">{{ page }}</li>
+    {% end %}
+    {% else %}
+ <li><span class="pagination-ellipsis">&hellip;</span></li>
+    {% end %}
+    {% end %}
+    {% if pagination.has_next %}
+        <li><a class="pagination-next" href="/staff?page={{ pagination.page + 1}}">下页 &raquo;</a></li>
+    {% end %}
+      </ul>
+</nav>
+
+
+
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $("a[name=a_del]").on("click",function(){
+          id = $(this).attr("title")
+          f_del = $(this).attr("value")
+          // alert(id)
+          if(confirm("确认操作吗?")){
+              $.post("/staff?tag=del",{"id":id,"f_del":f_del},function(result){
+                alert(result)
+                location.reload()
+              })
+          }
+        })
+    })
+</script>
+{%end%}

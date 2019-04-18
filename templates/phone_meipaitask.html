@@ -1,0 +1,50 @@
+  {% extends "admin.html" %}
+  {%block title%}{%end%}
+  {% block body %}
+
+<div class="container-fluid">
+<!-- Button to trigger modal -->
+  <br/>
+        <div class="page-header">
+          <h3>mpai发送分布数据</h3>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span12">
+
+
+   合计: {{total.count}}
+  <br/>
+  <form method="get">
+    <input class="input" name="start" type="text" placeholder="开始时间" value="{{start}}">     <input class="input" name="end" type="text" placeholder="结束时间" value="{{end}}">
+    <input type="hidden" value="momo" name="tag"/>
+    <input type="submit" value="查询" class="button">
+
+</form>
+  <br/>
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                     <th  width="50">设备名</th>
+                      <th width="150">发送数</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {%for item in data_total%}
+<tr >
+
+                      <td>
+                    {{item.uid}}
+                      </td>
+                        <td>
+                        {{item.count}}
+                      </td>
+                    </tr>
+                    {%end%}
+
+                  </tbody>
+                </table>
+
+{%end%}

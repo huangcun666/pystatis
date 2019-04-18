@@ -1,0 +1,283 @@
+{% extends "admin.html" %}
+  {%block title%}客户管理{%end%}
+
+     {%block head%}
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
+  {%end%}
+  {% block body %}
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->
+
+    <section>
+      <div class="page-header">
+        <h3></h3>
+
+        <div class="row">
+          <div class="span9">
+            <h3>POI管理</h3>
+          </div>
+          <div class="span2">
+            <button class="btn btn-info" name="btn_add">新建POI</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th  width="100">POI名称</th>
+                <th width="50">POI类型</th>
+               
+                <th >地址</th>
+              <th width="50">权限(所属)</th>
+
+                <th width="50"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {%for item in customers%}
+              <tr id="{{item.f_id}}">
+
+                <td>{{item.f_name}}</td>
+                <td>{{item.f_type_name}}</td>
+             
+                <td>{{item.f_addr}}</td>
+                         <td>{{item.f_mobile_name}}</td>
+
+                <td>
+                  <button  name="btn_view" value="{{item.f_id}}" >详细</button>
+
+                </td>
+              </tr>
+              {%end%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">POI管理</h3>
+    </div>
+    <div class="modal-body">
+
+      <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+          <a href="#home" id="atitle" data-toggle="tab">修改</a>
+        </li>
+        <li>
+          <a href="#profile" data-toggle="tab">地图标注</a>
+        </li>
+      </ul>
+      <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+
+            <div class="control-group info">
+              <label class="control-label" for="all_view">权限(所属)</label>
+             <select name="all_view">
+              <option value="1" >公有</option>
+              <option value="2" >私有</option>
+            </select>
+                         <select name="mobileid">
+                          {%for row in t_mobile%}
+                        <option value="{{row.f_id}}">{{row.f_name}}</option>
+                    {%end%}
+            </select>
+            </div>
+          <div class="control-group info">
+            <label class="control-label" for="name">POI名称</label>
+            <div class="controls">
+              <input type="text" name="name" class="span5" ></div>
+            <label class="control-label" for="company">类型</label>
+            <div class="controls">
+              <select name="typeid" id="typeid" class="span5">
+                {%for row in t_poi_type%}
+                      <option value="{{row.f_id}}">{{row.f_name}}</option>
+                {%end%}
+              </select> <a href="/poi_type">配置</a></div>
+
+
+            <label class="control-label" for="phone">联系电话</label>
+            <div class="controls">
+              <input type="text" name="phone" id="phone" class="span5"></div>
+            <label class="control-label" for="addr">联系地址</label>
+            <div class="controls">
+              <input type="text" name="addr" class="span5"> <a href="#" id="tomap">地图</a></div>
+            <label class="control-label" for="lng">经度</label>
+            <div class="controls">
+              <input type="text" name="lng" id="lng" class="span5"></div>
+            <label class="control-label" for="lat">纬度</label>
+            <div class="controls">
+              <input type="text" name="lat" id="lat" class="span5"></div>
+            <label class="control-label" for="email">电子邮件</label>
+            <div class="controls">
+              <input type="text" name="email" id="email" class="span5"></div>
+            <label class="control-label" for="fax">传真</label>
+            <div class="controls">
+              <input type="text" name="fax" class="span5"></div>
+            <label class="control-label" for="remark">备注</label>
+            <div class="controls">
+              <textarea name="remark" id="remark" class="span5"></textarea>
+            </div>
+          </div>
+
+        </div>
+        <div class="tab-pane fade" id="profile">
+
+                  <div id="map_canvas" style="width:510px;height:350px"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <input type="hidden" value="" name="id">
+      <input type="hidden" value="" name="tag">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+      <button class="btn btn-primary" name="btn_save">保存修改</button>
+    </div>
+  </div>
+  {% end %}
+
+{%block js%}
+  <script>
+$(document).ready(function(){
+
+  window.prettyPrint && prettyPrint();
+
+
+  //加载点聚合
+
+var map = new BMap.Map("map_canvas");            // 创建Map实例
+var opts = {type: BMAP_NAVIGATION_CONTROL_SMALL} 
+var geocoder = new BMap.Geocoder();//地址解析类 
+map.addControl(new BMap.NavigationControl(opts));
+map.centerAndZoom("{{t_user.f_city}}",12);                   // 初始化地图,设置城市和地图级别。
+map.enableScrollWheelZoom();  
+var  point,marker
+map.addEventListener("click",function(e){
+       map.clearOverlays();
+      $("input[name=lng]").val(e.point.lng)
+      $('input[name=lat]').val(e.point.lat)
+     
+      $('input[name=addr]').val(e.point.addr)
+         point = new BMap.Point(e.point.lng,e.point.lat)
+        
+        marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+     
+
+      geocoder.getLocation(point, function(rs){  
+          var addr = rs.address;  
+          $('input[name=addr]').val(addr)
+      });
+         map.centerAndZoom(point,12);     
+      $('#myTab a:first').tab('show');
+      $('input[name=lat]').focus()
+});
+$("#tomap").live("click",function(){
+
+   $('#myTab a[href=#profile]').tab('show');
+})
+
+  $("button[name=btn_add]").live("click",function(){
+      $("input[name=id]").val('');
+      $('input[name=name]').val('')
+      $("#atitle").text("新建")
+      $('input[name=tag]').val('add')
+      $("input[name=phone]").val('')
+      $("select[name=all_view]").attr("value","1")
+      $("input[name=lat]").val('')
+      $("input[name=lnt]").val('')
+      $("input[name=fax]").val('')
+      $("#remark").val('')
+      $("input[name=lng]").val('')
+      $('input[name=lat]').val('')
+      $('input[name=addr]').val('')
+       map.clearOverlays();
+      map.centerAndZoom("{{t_user.f_city}}",10);    
+      $("#myModal").modal('show')
+
+  })
+ 
+  $("button[name=btn_view]").live("click",function(){
+    id = $(this).val();
+    $.get("/AjaxQuery",{"id":id,"tag":"byid"},function(data){
+      $("#atitle").text("修改")
+      $("input[name=id]").val(data.f_id);
+      $('input[name=tag]').val("edit")
+      $("button[name=btn_save]").val(data.f_id)
+
+      $("select[name=all_view]").attr('value',data.f_all_view)
+      if (data.f_all_view==2){
+        //$("select[name=mobileid]").hide()
+      }
+      $("select[name=mobileid]").attr("value",data.f_mobileid)
+       $('select[name=typeid]').attr("value",data.f_typeid)
+      $('input[name=phone]').val(data.f_phone)
+      $("input[name=name]").val(data.f_name)
+      $("input[name=addr]").val(data.f_addr)
+      $('input[name=fax]').val(data.f_fax)
+      $('input[name=email]').val(data.f_email)
+      $('input[name=lat]').val(data.f_latitude)
+      $('input[name=lng]').val(data.f_longitude)
+      $('textarea[name=remark]').val(data.f_remark)
+
+      if(data.f_longitude!="" && data.f_latitude!=""){
+          point = new BMap.Point(data.f_longitude,data.f_latitude)
+
+       map.centerAndZoom(point,10)
+             map.clearOverlays();
+        marker = new BMap.Marker(point);
+       map.addOverlay(marker);
+}
+      $("#myModal").modal("show")
+  },"json")
+  })
+
+  $("button[name=btn_save]").live("click",function(){
+    id = $("input[name=id]").val();
+    tag = $('input[name=tag]').val()
+    name=$("input[name=name]").val()
+    phone=$("input[name=phone]").val()
+    typeid = $("select[name=typeid]").val()
+    lat = $("input[name=lat]").val()
+    lng = $("input[name=lng]").val()
+    addr = $("input[name=addr]").val()
+    email = $("input[name=email]").val()
+    fax = $("input[name=fax]").val()
+    remark=$("#remark").val()
+    mobileid = $("select[name=mobileid]").val()
+
+    all_view = $("select[name=all_view]").val()
+
+    _xsrf=getCookie("_xsrf");
+    $.post("/POI",{"name":name,"phone":phone,"typeid":typeid,
+      "lat":lat,"lng":lng,"addr":addr,"email":email,
+      "fax":fax,"remark":remark,"_xsrf":_xsrf,"tag":tag,"id":id,"mobileid":mobileid,
+      "all_view":all_view
+    },function(returnid){
+     if (returnid =="1"){
+        $("#show_msg").show()
+        $("#show_msg").html("名称不能为空.")
+
+      }
+      else if(returnid =="2"){
+        $("#myModal").modal('hide')
+        location.href='/POI'
+      }
+      else if(returnid=="3"){
+        $("#myModal").modal('hide')
+        location.href='/POI'
+      }
+    })
+  })
+})
+</script>
+  {%end%}

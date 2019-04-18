@@ -1,0 +1,56 @@
+  {% extends "admin.html" %}
+  {%block title%}{%end%}
+  {% block body %}
+
+<div class="container-fluid">
+<!-- Button to trigger modal -->
+  <br/>
+        <div class="page-header">
+          <h3>app发送数据</h3>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span12">
+  <br/>
+  <form method="get">
+    <input class="input" name="start" type="text" placeholder="开始时间" value="{{start}}">     <input class="input" name="end" type="text" placeholder="结束时间" value="{{end}}">
+    <input type="hidden" value="total" name="tag"/>
+    <input type="submit" value="查询" class="button">
+
+</form>
+  <br/>
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                                            <th width="150">meipai</th>
+
+                     <th  width="50">moca</th>
+                      <th width="150">momo</th>
+                       <th width="150">piaoliupin</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+<tr >
+   <td>
+    {{meipai_total.count}}
+                      </td>
+                      <td>
+                      {{moca_total.count}}
+                      </td>
+                        <td>
+        {{momo_total.count}}
+                      </td>
+    <td>
+  {{piaoliupin_total.count}}
+                      </td>
+
+
+                    </tr>
+
+
+                  </tbody>
+                </table>
+
+{%end%}

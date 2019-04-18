@@ -1,0 +1,222 @@
+  {% extends "admin.html" %}
+  {%block title%}终端管理{%end%}
+  {%block head%}
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+
+  <style type="text/css">
+body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+#l-map{height:100%;width:78%;float:left;border-right:2px solid #bcbcbc;}
+#r-result{height:100%;width:20%;float:left;}
+</style>
+  {%end%}
+  {% block body %}
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->  
+
+    <section>
+      <div class="page-header">
+        <div class="row">
+          <div class="span6">
+            <h3>我的资料</h3>
+          </div>
+          <div class="span4">
+
+            <button  name="btn_edit_info" >修改资料</button>
+    
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row-fluid">
+
+        <div class="span3 offset2 well">
+          <dt>帐户:</dt>
+         <dd id="email"> {{t_user.f_email}}<dd>
+         <dt>企业名称:</dt>
+         <dd id="company"> {{t_user.f_company}}<dd>
+          <dt>创建时间:</dt>
+         <dd> {{t_user.f_addtime}}<dd>
+
+</div>
+
+        <div class="span3 offset2 well">
+ <dt>设备名称:</dt>
+          <br/>  
+      </div>
+        <div class="span3 offset2 well">
+ <dt>设备名称:</dt>
+          <br/>  
+      </div>
+              <div class="span3 offset2 well">
+ <dt>设备名称:</dt>
+          <br/>  
+      </div>
+
+    </section>
+
+  </div> 
+
+
+<div id="userinfoModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">修改资料
+      <span id="s_title"></span></h3>
+  </div>
+  <div class="modal-body">
+    <div class="alert fade in" id="show_msg_user" style="display:none;">
+                     
+                      </div>
+   
+    <div class="control-group info">
+              <label class="control-label" for="inputInfo">帐户</label>
+              <div class="controls">
+
+                <input type="text" name="email" class="span5"  readonly>
+              </div>
+
+
+               <label class="control-label" for="company">企业名称</label>
+              <div class="controls">
+                <input type="text" name="company"  class="span5">
+              </div>        
+
+   </div>
+
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary" value="" name="btn_save_userinfo">保存修改</button>
+    <input type="hidden" value="" name="tag">
+
+
+         
+  </div>
+</div>
+
+
+  <div id="mapModal" class=" modal  hide fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3>切换城市</h3>
+    </div>
+    <div style="width:99%;height:300px;border:1px solid gray;overflow-y:auto;" id="city_container"></div>
+
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+  </div>
+
+
+  <div id="locusModal" class="modal  hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3>切换城市</h3>
+    </div>
+    <div style="width:99%;height:300px;border:1px solid gray;overflow-y:auto;" id="city_container"></div>
+
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+  </div>
+
+  <!--model-->  
+  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">标注客户//新建</h3>
+    </div>
+    <div class="modal-body">
+
+      <div class="control-group info">
+        <label class="control-label" for="name">名字</label>
+        <div class="controls">
+
+          <input type="text" name="name" class="span5" ></div>
+        <label class="control-label" for="company">公司名称</label>
+        <div class="controls">
+          <input type="text" name="company" id="company"  class="span5"></div>
+
+        <label class="control-label" for="phone">联系电话</label>
+        <div class="controls">
+          <input type="text" name="phone" id="phone"  class="span5"></div>
+
+        <label class="control-label" for="addr">联系地址</label>
+        <div class="controls">
+          <input type="text" name="addr"  class="span5"></div>
+        <label class="control-label" for="lng">经度</label>
+        <div class="controls">
+          <input type="text" name="lng" id="lng"  class="span5"></div>
+
+        <label class="control-label" for="lat">纬度</label>
+        <div class="controls">
+          <input type="text" name="lat" id="lat"  class="span5"></div>
+
+        <label class="control-label" for="email">电子邮件</label>
+        <div class="controls">
+          <input type="text" name="email"   id="email" class="span5"></div>
+
+        <label class="control-label" for="fax">传真</label>
+        <div class="controls">
+          <input type="text" name="fax"  class="span5"></div>
+
+        <label class="control-label" for="remark">备注</label>
+        <div class="controls">
+          <textarea name="remark" id="remark" class="span5"></textarea>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+      <button class="btn btn-primary" value="" name="btn_save">保存修改</button>
+    </div>
+  </div>
+  {%end%}
+
+{%block js%}
+<script type="text/javascript">
+  $(function() {
+    _xsrf=getCookie("_xsrf");
+    $("button[name=btn_edit_info]").live("click", function() {
+      email = $("#email").text()
+      company = $("#company").text()
+      $("input[name=email]").val(email)
+      $("input[name=company]").val(company)
+      $("#userinfoModal").modal('show')
+    })
+
+    $("button[name=btn_save_userinfo]").live("click", function() {
+
+      email = $("input[name=email]").val()
+      company = $("input[name=company]").val()
+
+      $.post("/userinfo", {
+        "email": email,
+        "company": company,
+        "tag": "my",
+        "_xsrf":_xsrf
+      }, function(returnid) {
+          if (returnid=="1"){
+              $("#show_msg_user").show()
+              $("#show_msg_user").html("帐户不存在")
+          }
+          else if(returnid =="2"){
+              $("#show_msg_user").show()
+              $("#show_msg_user").html("公司不存在")              
+          }
+          else{
+            $("#userinfoModal").modal('hide')
+            $("#email").text(email)
+            $("#company").text(company)
+          }
+      })
+    })
+  })
+  </script>
+  {%end%}

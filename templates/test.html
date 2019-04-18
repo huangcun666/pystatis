@@ -1,0 +1,57 @@
+<html>
+   <head>
+      <title></title>
+<script type="text/javascript" src="http://test1.gzfaye.com/js/jquery1.42.min.js"></script>
+   </head>
+   <body>
+
+<div class="g-biaodan">
+            <h2>免费公司起名</h2>
+            <span>100%通过注册，满意为止</span>
+            <input type="text" id="region" placeholder="请输入公司所在地区。如：广州" class="diqu1">
+            <input type="text" id="industry" placeholder="请输入公司行业。如：科技" class="hanye1">
+            <input type="text" id="phone" placeholder="请输入您的手机号码" class="haoma1">
+            <button class="g-bottom" id="btnsave">开始起名</button>
+        </div>
+
+<script type="text/javascript">
+    $(function(){
+
+    $("#btnsave").click(function(){
+    region =$("#region").val()
+    industry=$("#industry").val()
+    phone=$("#phone").val()
+
+    if (region==""){
+        alert("地区不能为空哦.")
+        $("#region").focus()
+        return false
+    }else if (industry==""){
+        alert("行业不能为空哦.")
+        $("#industry").focus()
+        return false
+    }else if (phone==""){
+        alert("手机号不能为空哦.")
+        $("#phone").focus()
+        return false
+    }else{
+        $.post("http://data.gzfaye.com/booking",{"phone":phone,"industry":industry,"region":region,"curr_url":document.url},function(result){
+            if(result=="0"){
+                alert("提交成功,稍后电话联系您!")
+                location.reload()
+
+            }else{
+                alert(result)
+            }
+  })
+    }
+
+})
+
+    })
+
+
+</script>
+
+   </body>
+ </html>

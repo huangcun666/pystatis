@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>{%block title%}{%end%}
+</title>
+<meta http-equiv="refresh" content="30">
+
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+{%block head%}{%end%}
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+<script type="text/javascript" src="/static/css/jsapi"></script>
+
+<script type="text/javascript" src="/static/css/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/static/css/main.js"></script>
+<script type="text/javascript" src="/static/css/bootstrap.min.js"></script>
+
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+      <script type="text/javascript" src="/static/css/countries_en.js"></script><link href="/static/css/tooltip.css" rel="stylesheet" type="text/css"><script type="text/javascript" charset="utf-8" src="/static/css/get.js"></script>
+
+      <link href="/static/css/datepicker.css" rel="stylesheet">
+      <script src="/static/js/bootstrap-datepicker.js"></script>
+      <script>
+      function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+    </script>
+</head>
+
+<body>
+    <div class="navbar navbar-fixed-top m-header">
+        <div class="navbar-inner m-inner">
+            <div class="container-fluid">
+                <a class="brand m-brand" href="/data?tag=total">
+                    数据平台</a>
+
+
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <div class="nav-collapse collapse">
+
+                        <div class="btn-group pull-right">
+                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="/login?tag=logout">
+                                <i class="icon-user"></i>退出
+
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-top"></div>
+        <aside class="sidebar">
+            <ul class="nav nav-tabs nav-stacked">
+                <li class="">
+                    <a href="/show">
+                        <div>
+                            <div class="ico">
+                                <img src="/static/css/ico-setting.gif">
+                            </div>
+                            <div class="title">
+                                实时数据统计
+                            </div>
+                        </div>
+                        <div class="arrow">
+                            <div class="bubble-arrow-border"></div>
+                            <div class="bubble-arrow"></div>
+                        </div>
+                    </a>
+                </li>
+
+
+                <li class="">
+                    <a href="IPshow?curr_url=bd">
+                        <div>
+      <div class="ico">
+                                <img src="/static/css/ico-order.gif">
+                            </div>
+                            <div class="title">
+                                实时恶意监测
+                            </div>
+                        </div>
+
+                        <div class="arrow">
+                            <div class="bubble-arrow-border"></div>
+                            <div class="bubble-arrow"></div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="">
+                    <a href="/listbook">
+                        <div>
+      <div class="ico">
+                                <img src="/static/css/ico-order.gif">
+                            </div>
+                            <div class="title">
+                                用户留言
+                            </div>
+                        </div>
+
+                        <div class="arrow">
+                            <div class="bubble-arrow-border"></div>
+                            <div class="bubble-arrow"></div>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="">
+                    <a href="/testregister">
+                        <div>
+      <div class="ico">
+                                <img src="/static/css/ico-order.gif">
+                            </div>
+                            <div class="title">
+                                注册公司
+                            </div>
+                        </div>
+
+                        <div class="arrow">
+                            <div class="bubble-arrow-border"></div>
+                            <div class="bubble-arrow"></div>
+                        </div>
+                    </a>
+                </li>
+
+    </ul>
+</aside>
+<div class="m-sidebar-collapsed">
+    <ul class="nav nav-pills"><li class="">
+        <a href="#">
+            <div>
+                <div class="ico">
+                    <img src="/static/css/ico-report.gif">
+                </div>
+                <div class="title">
+                    全局管理
+                </div>
+            </div>
+            <div class="arrow">
+                <div class="bubble-arrow-border"></div>
+                <div class="bubble-arrow"></div>
+            </div>
+        </a>
+    </li>
+
+</ul>
+
+<div class="arrow-border">
+    <div class="arrow-inner"></div>
+</div>
+</div>
+<div class="main-container" style="height: 729px; ">
+    {% block body %}{% end %}
+</div><div style="position: absolute; display: none; "><div style="background-color: infobackground; padding: 1px; border: 1px solid infotext; font-size: 12px; margin: 12px; font-family: Arial; background-position: initial initial; background-repeat: initial initial; ">Expenses</div></div>
+
+</body></html>
+{%block js%}
+
+{%end%}

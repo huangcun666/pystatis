@@ -1,0 +1,20 @@
+<html>
+   <head>
+      <title>{{ title }}</title>
+   </head>
+   <body>
+
+
+
+<script type="text/javascript">
+
+  $.post("http://data.gzfaye.com/booking",{"phone":phone,"industry":industry,"region":region,"curr_url":document.url},function(result){
+        alert(result)
+        location.reload()
+
+  })
+
+</script>
+
+   </body>
+ </html>

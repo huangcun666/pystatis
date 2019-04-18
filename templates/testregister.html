@@ -1,0 +1,83 @@
+{% extends "admin.html" %}
+{%block title%}所有记录{%end%}
+
+{%block body%}
+
+
+
+<div class="container-fluid">
+  <!-- Button to trigger modal -->
+      <section>
+
+
+          <h3>
+                              实时数据统计</h3>
+
+</section>
+
+<hr/>
+
+    <div class="row-fluid">
+      <div class="span12">
+<table class="table">
+<thead>
+  <tr>
+         <th><abbr title="注册地址">注册地址</abbr></th>
+
+   <th><abbr title="注册类型">注册类型</abbr></th>
+        <th><abbr title="是否需要代理记账">是否需要代理记账</abbr></th>
+   <th><abbr title="是否有外资（含港、澳、台）成分">是否有外资（含港、澳、台）成分</abbr></th>
+    <th><abbr title="姓名">姓名</abbr></th>
+   <th><abbr title="手机号码">手机号码</abbr></th>
+   
+
+  </tr>
+</thead>
+
+<tbody>
+{%for item in text_register%}
+  <tr>
+<td width="100">{%if item.address==1%}自由地址{%elif item.address==2%}地址挂靠{%end%}</td>
+
+  <td width="250">
+    {%if item.type==1%}小规模
+    {%elif item.type==2%}一般纳税人
+    {%elif item.type==3%}
+    个体户  
+    {%end%}</td>
+       <td>{%if item.demand==1%}是{%elif item.demand==2%}否{%end%}</td>
+
+       <td>{%if item.component==1%}是{%elif item.component==2%}否{%end%}</td>
+  <td width="150">{{item.name}}</td>
+  <td width="150">{{item.tel}}</td>
+
+  </tr>
+  {%end%}
+</tbody>
+</table>
+<nav class="pagination">
+{% if pagination.has_prev %} <li><a href="/testregister?page={{ pagination.page - 1}}"  class="pagination-previous">&laquo; 上页</a></li> {% end %}
+<ul class="pagination-list">
+{% for page in pagination.iter_pages() %}
+  {% if page %}
+  {% if page != pagination.page %}
+ <li  class="pagination-link">
+  <a href="/testregister?page={{ page }}">{{ page }}</a></li>
+  {% else %}
+    <li  class="pagination-link"> <a href="#">{{ page }}</a></li>
+  {% end %}
+  {% else %}
+   <li  class="pagination-link"> <a href="#">&hellip;</a></li>
+  {% end %}
+  {% end %}
+  {% if pagination.has_next %}
+      <li><a class="pagination-next" href="/testregister?page={{ pagination.page + 1}}">下页 &raquo;</a></li>
+  {% end %}
+    </ul>
+</nav>
+      </div>
+    </div>
+  </section>
+</div>
+
+{%end%}

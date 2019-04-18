@@ -1,0 +1,124 @@
+  {% extends "admin.html" %}
+  {%block title%}核单系统{%end%}
+
+  {%block head%}
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
+
+  {%end%}
+  {% block body %}
+
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->
+
+    <section>
+      <div class="page-header">
+        <h3></h3>
+
+        <div class="row">
+         <div class="span9"> <h3>考勤管理</h3>
+         </div>
+         <div class="span2">
+
+         </div></div>
+       </div>
+
+       <div class="row-fluid">
+        <div class="span12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+               <th  width="100">终端名称</th>
+               <th>地址</th>
+
+                  <th width="400">备注</th>    <th width="120">签到时间</th>
+               <th width="50"></th>
+             </tr>
+           </thead>
+
+           <tbody>
+            {%for item in t_sign%}
+            <tr id="{{item.f_id}}">
+
+              <td>
+                <input type="hidden" id="latitude_{{item.f_id}}" value="{{item.f_latitude}}">
+                <input type="hidden" id="longitude_{{item.f_id}}" value="{{item.f_longitude}}">
+
+                <input type="hidden" id="addtime_{{item.f_id}}" value="{{item.f_addtime}}">
+                {{item.f_name}}
+              </td>
+              <td>
+               {{item.f_addr}}
+             </td>
+
+             <td>
+              {{item.f_remark}}
+            </td>
+          <td>
+              {{item.f_addtime}}
+            </td>
+
+
+            <td>
+              <button role="button" name="btn_view" value="{{item.f_id}}" data-toggle="modal">详细</button>
+
+            </td>
+          </tr>
+          {%end%}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>     </div>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">考勤信息//# </h3>
+  </div>
+  <div class="modal-body">
+
+    <div id="map_canvas" style=" width:500px;height:200px;margin:0px;padding:0px"></div>
+
+
+  </div>
+
+
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  </div>
+</div>
+{% end %}
+
+{%block js%}
+<script>
+$(document).ready(function(){
+ var map = new BMap.Map("map_canvas");
+ $("button[name=btn_view]").live("click",function(){
+
+  id=$(this).val()
+  var f_latitude = $("#latitude_"+id).val()
+  var f_longitude = $("#longitude_"+id).val()
+  var f_addtime = $("#addtime_"+id).val()
+  var point = new BMap.Point(f_longitude, f_latitude);
+
+ //alert(f_longitude+","+f_latitude)
+
+
+      var marker = new BMap.Marker(point);  // 创建标注
+      map.addOverlay(marker);                    // 将标注添加到地图中
+      var label = new BMap.Label(f_addtime,{offset:new BMap.Size(20,-10)});
+      marker.setLabel(label);
+      map.centerAndZoom(point, 15);
+     // alert(map.getCenter())
+      window.setTimeout(function(){
+        map.panTo(point)
+      },1000);
+
+      $("#myModal").modal("show")
+    })
+
+})
+</script>
+{%end%}

@@ -1,0 +1,71 @@
+{% extends "/admin.html" %}
+{% block body %}
+    <div class="container-fluid">
+    <section>
+    <div class="page-header">
+        <h1>Settings <small>admin base settings</small></h1>
+    </div>
+    <div class="row-fluid">
+
+        <div class="span12">
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-white icon-plus"></i>
+                    Add new
+
+                </a>
+
+            </div>
+        </div>
+    <div class="span11">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>手机平台</th>
+                <th>软件版本</th>
+                <th>IMEI码</th>
+                <th>地区</th>
+                <th>邮箱</th>
+
+                <th>创建时间</th>
+                <th>最后登陆</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+            {%for item in mobile_list: %}
+                <tr>
+                    <td>
+                        {{ item.f_name }}
+                    </td>
+                    <td>{{ item.f_mobilenum }}</td>
+                    <td>{{ item.f_soft_typeid }}</td>
+                    <td>{{ item.f_version }}</td>
+                    <td>{{ item.f_imei }}</td>
+                    <td>{{ item.f_diqu }}</td>
+                    <td>{{ item.f_email }}</td>
+                    <td>{{ item.f_addtime }}</td>
+                    <td>{{ item.f_lastlogintime }}</td>
+
+                </tr>
+            {%endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+    </section>
+
+
+
+
+    </div>
+    </div>
+
+{% endblock %}

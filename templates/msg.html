@@ -1,0 +1,143 @@
+  {% extends "admin.html" %}
+  {%block title%}消息管理{%end%}
+
+   {%block head%}
+ 
+
+  {%end%}
+  {% block body %}
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->  
+
+    <section>
+      <div class="page-header">
+        <h3></h3>
+
+        <div class="row">
+          <div class="span9">
+            <h3>消息管理</h3>
+          </div>
+          <div class="span2">
+            <button   class="btn btn-info" name="btn_add">新 建</button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th >消息标题</th>
+                <th  width="140">添加时间</th>
+                <th width="50"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {%for item in t_msg%}
+              <tr id="{{item.f_id}}">
+
+                <td>{{item.f_title}}</td>
+                <td>{{item.f_addtime}}</td>
+                <td>
+                  <button role="button" name="btn_view" value="{{item.f_id}}" data-toggle="modal">详细</button>
+
+                </td>
+              </tr>
+              {%end%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal -->  
+  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel" >新建消息</h3>
+    </div>
+    <div class="modal-body">
+      <div class="control-group info">
+        <label class="control-label" for="title">标题</label>
+        <div class="controls">
+
+          <input type="text" name="title" id="title" class="span5" ></div>
+        <label class="control-label" for="text">内容</label>
+        <div class="controls">
+
+          <textarea name="text" id="text" class="span5" style="height:100px" ></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <input type="hidden" value="" id="id" name="id">  
+      <input type="hidden" value="" id="tag" name="tag">  
+      <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+      <button class="btn btn-primary" value="" name="btn_save">保存修改</button>
+    </div>
+  </div>
+  {% end %}
+
+{%block js%}
+  <script>
+$(document).ready(function(){
+  $("button[name=btn_save]").live("click",function(){
+    title =$("#title").val()
+    text = $("#text").val()
+    tag=$("#tag").val()
+    id = $("#id").val()
+    
+    _xsrf=getCookie("_xsrf")
+    $.post("/Msg",{"title":title,"text":text,"tag":tag,"_xsrf":_xsrf,"id":id},function(returnid){
+        if (returnid=="1"){
+          $("#show_msg").show()
+          $("#show_msg").html("标题不能为空..")
+        }
+        else if(returnid=="2"){
+          $("#show_msg").show()
+          $("#show_msg").html("信息内容不能为空.")
+        }
+        else if(returnid =="3"){
+          $("#myModal").modal('hide')
+          location.href='/Msg' 
+        }
+        else if(returnid=="5"){
+          $("#myModal").modal('hide')
+          location.href='/Msg'        
+        }
+    })
+  })
+  $("button[name=btn_add]").live("click",function(){
+    $("#myModalLabel").val("新建消息")
+    $("#id").val('')
+    $("#title").val('')
+    $("#text").val('')
+    $("#tag").val("add")
+    $("#myModal").modal('show')
+  })
+  $("button[name=btn_view]").live("click",function(){
+    
+      id=$(this).val()
+      _xsrf=getCookie("_xsrf")
+
+      $.post("/Msg",{"tag":"query","id":id,"_xsrf":_xsrf},function(data){
+        var item = data
+      $("#id").val(id)
+      $("#myModalLabel").val("修改消息")
+      $("#title").val(item.f_title)
+      $("#text").val(item.f_text)
+      $("#tag").val("edit")
+        $("#myModal").modal("show")
+      },"json")
+      
+  })
+
+})
+</script>
+  {%end%}

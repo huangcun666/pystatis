@@ -1,0 +1,17 @@
+<script type="text/javascript" src="http://www.gzfaye.com/templets/jizhang/js/jquery1.42.min.js"></script>
+
+<script>
+$(document).ready(function(){
+
+
+  $.post("http://localhost:9003/data", {
+      "curr_url":document.URL,
+      "ref":  "http://m.baidu.com/baidu.php?sc.0f00000OfAuIoGT35MqSSHctfrvttfpimqZjQCOyYoZeoiv3ux9U6GUhuF9rVSsYmvbrW_UFp7fsGw0Pq1xRPZ05WdK-GT3eCcC8q6sfCyFQV6uwQucCjMmds9cWAXiKRF1SUV2tqAzbD1dwTRTpoMewwzA7PfhPpYbKZAe9RkQj61TMq0.Db_ipxQNslvIaRfIeeVqxWztISe_tNBmEhIswGho4XaPmuCynh1u8e70.U1Yk0ZDq8X5yLTof8pHF10KlTA3qnjcsnWb3P164rHb0TA-W5H00Ijv43qUIzVa4GnMndl2z3Uhoze30pyYqnWc10ATqIvwln0KdpHY0TA-b5Hf0mv-b5H6Y0AdY5HDsnHIxnH0krNtznjmzg1nsnj9xnW0zPdt1PW0k0AVG5H00TMfqrHcv0ANGujYknW0zP1IxnH0zPHTsg1Dsnj6sPdt4n10zg1DkPjTYP7tknj0knjKxnHcsnHndg1DkrHD1PdtknH63rHIxnHD3rjTLg1Dkrj6dndtknH63nW9xnHD3P16Lg1DznjTLP7tknH64P1FxnHDLnWn30AFG5HcsP-tznj0sn-tznj01nfKVm1YvP1mdnjfdPjNxPWTvPH0YPHRkg1cvrHR3rjbLnW-xnH0zg1D3nj0krjNxn0KkTA-b5Hf0TyPGujY3P0KzuLw9u1Ys0A7B5HKxn0K-ThTqn0KsTjYs0A4vTjYsQW0snj0snj0s0AdYTjYs0AwbUL0qn0KzpWYs0Aw-IWdLpgP-0AuY5Hc0TA6qn0KET1Yz0AFL5Hc0UMfqP0K1XWYkn1csg1Dsnjc0IZN15HD1nH03njb1rHc4nHRkn1c4nHmd0ZF-TgfqnHRknWTzP1msnWbdrfK1pyfqmyRsuAR3PjKBnjnsnWPWufKWTvYqf1mvPRcdn1IjrjF7fHKKwfK9m1Yk0ZK85H00TydY5H00Tyd15H00XMfqn0KVmdqhThqV5HKxn7tsg1Kxn7ts0Aw9UMNBuNqsUA78pyw15HKxn7tsg1DzrHT3PH-xn7ts0ZK9I7qhUA7M5H00uAPGujYs0ANYpyfqQHD0mgPsmvnqnWRL0ZNspy4Wm1YzPHT0Tydh5HDv0AuWIgfqn0KhXh6qn0Khmgfqn0KlTAkdT1Ys0A7buhk9u1Yk0Akhm1Yz0ZIhThqV5HDsrjuo0APzm1YdPHTLP6&qid=ae0de840b03023ce&sourceid=111&placeid=1&rank=1&shh=m.baidu.com&word=%E5%B9%BF%E5%B7%9E%E5%B8%82%E5%B7%A5%E5%95%86&sht=1086k&ck=3825.131.146.174.408.269.0.0.37.150.174&us=0.0.0.0.0.0.0.103",
+      "ua":navigator.userAgent
+    }, function(returnid) {
+      if(returnid == 0) {
+          console.log(returnid)
+      }
+    })
+})
+</script>

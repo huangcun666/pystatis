@@ -1,0 +1,84 @@
+  {% extends "admin.html" %}
+  {%block title%}所有记录{%end%}
+
+{%block body%}
+
+
+
+  <div class="container-fluid">
+    <!-- Button to trigger modal -->
+        <section>
+
+
+            <h3>
+                                实时数据统计</h3>
+
+</section>
+
+<hr/>
+
+      <div class="row-fluid">
+        <div class="span12">
+  <table class="table">
+  <thead>
+    <tr>
+           <th><abbr title="访问时间">业务类型</abbr></th>
+
+     <th><abbr title="访问时间">提交时间</abbr></th>
+          <th><abbr title="来源地址">姓名</abbr></th>
+     <th><abbr title="来源地址">电话</abbr></th>
+      <th><abbr title="IP">地区</abbr></th>
+     <th><abbr title="当前地址">行业</abbr></th>
+      <th><abbr title="IP">ip</abbr></th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+  {%for item in data_order%}
+    <tr>
+<td width="100">{%if item.name%}公司注册{%else%}公司起名{%end%}</td>
+
+    <td width="250">{{item.created_at}}</td>
+         <td>{%if item.name%}{{item.name}}{%end%}</td>
+
+         <td>{{item.phone}}</td>
+    <td width="150">{{item.region}}</td>
+    <td width="150">{{item.industry}}</td>
+    <td width="150">{{item.ip}}</td>
+      <td> </td>
+
+
+
+
+
+    </tr>
+    {%end%}
+  </tbody>
+</table>
+<nav class="pagination">
+ {% if pagination.has_prev %} <li><a href="/show?page={{ pagination.page - 1}}"  class="pagination-previous">&laquo; 上页</a></li> {% end %}
+ <ul class="pagination-list">
+{% for page in pagination.iter_pages() %}
+    {% if page %}
+    {% if page != pagination.page %}
+   <li  class="pagination-link">
+    <a href="/show?page={{ page }}">{{ page }}</a></li>
+    {% else %}
+      <li  class="pagination-link"> <a href="#">{{ page }}</a></li>
+    {% end %}
+    {% else %}
+     <li  class="pagination-link"> <a href="#">&hellip;</a></li>
+    {% end %}
+    {% end %}
+    {% if pagination.has_next %}
+        <li><a class="pagination-next" href="/show?page={{ pagination.page + 1}}">下页 &raquo;</a></li>
+    {% end %}
+      </ul>
+</nav>
+        </div>
+      </div>
+    </section>
+  </div>
+
+{%end%}

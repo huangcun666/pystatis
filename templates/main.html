@@ -1,0 +1,280 @@
+  {% extends "admin.html" %}
+  {%block title%}终端管理a{%end%}
+  {%block head%}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.4"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+<script type="text/javascript" src="/static/js/RichMarker_min.js"></script>
+
+<style type="text/css">
+body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+#l-map{height:100%;width:78%;float:left;border-right:2px solid #bcbcbc;}
+#r-result{height:100%;width:20%;float:left;}
+</style>
+
+  {%end%}
+  {% block body %}
+
+
+<div class="container-fluid">
+<!-- Button to trigger modal -->
+
+  <section>
+        <div class="page-header">
+          <div class="row">
+         <div class="span6"> <h3>管理首页</h3>
+         </div>
+         <div class="span4">
+<button  name="btn_mobile" >刷新</button>
+
+
+  主城市: <b><span id="city_name">{{t_user.f_city}}</span></b>
+  <a href="#" id="changecity">[切换城市]</a><br/>
+
+
+         </div></div>
+
+        </div>
+
+
+        <div class="row-fluid">
+          <div class="span2">
+            <select  class="span12" multiple="multiple" name="mobile_list" id="mobile_list" size="1">
+              {%for item in t_mobile%}
+              <option value="{{item.f_id}}">{{item.f_name}}</option>
+              {%end%}
+            </select>
+          </div>
+
+
+          <div class="span10">
+
+  <div id="map_canvas" style="width:100%;height:500px;"></div>
+</div>
+</div>
+</section>
+
+ </div>
+
+<div id="mapModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>切换城市</h3>
+  </div>
+<div style="width:99%;height:300px;border:1px solid gray;overflow-y:auto;" id="city_container">
+</div>
+
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  </div>
+</div>
+
+
+{%end%}
+
+{%block js%}
+<script type="text/javascript">
+var map = new BMap.Map("map_canvas"); // 创建地图实例
+var opts = {
+  type: BMAP_NAVIGATION_CONTROL_SMALL
+}
+var geocoder = new BMap.Geocoder(); //地址解析类
+var myRichMarker2
+_xsrf = getCookie("_xsrf");
+map.addControl(new BMap.NavigationControl(opts));
+map.centerAndZoom("{{t_user.f_city}}", 6); // 初始化地图,设置中心点坐标和地图级别。
+map.enableScrollWheelZoom();
+// 创建CityList对象，并放在city_container节点内
+var myCl = new BMapLib.CityList({
+  "container": "city_container",
+  "map": map
+});
+// 给城市点击时，添加切换地图视野的操作
+myCl.addEventListener("cityclick", function(e) {
+  if(e.name != "") {
+    $.post("/user", {
+      "tag": "changecity",
+      "city": e.name,
+      "_xsrf": _xsrf
+    }, function(returnid) {
+      if(returnid == "1") {
+        $("#mapModal").modal('hide')
+        $("#city_name").text(e.name)
+      }
+    })
+  } else {
+    alert("城市名称不能为空.")
+  }
+
+  // 由于此时传入了map对象，所以点击的时候会自动帮助地图定位，不需要下面的地图视野切换语句
+  // map.centerAndZoom(e.center, e.level);
+});
+
+function ClearMarker() {
+  map.clearOverlays();
+}
+
+function getAddress(e) {
+  geocoder.getLocation(e.point, function(rs) {
+    var addr = rs.address;
+    $("input[name=name]").val('')
+    $("input[name=phone]").val('')
+    $("input[name=company]").val('')
+    $("input[name=lat]").val('')
+    $("input[name=lnt]").val('')
+    $("input[name=fax]").val('')
+    $("#remark").text('')
+
+    $("input[name=lng]").val(e.point.lng)
+    $('input[name=lat]').val(e.point.lat)
+    //alert(e.point.lng + ", " + e.point.lat);
+    $('input[name=addr]').val(addr)
+    $("#myModal").modal('show')
+  });
+}
+
+$(function() {
+  $("#changecity").live("click", function() {
+    $("#mapModal").modal('show')
+  })
+
+
+  var icon = new BMap.Icon('/static/ico/1/2.png', new BMap.Size(32, 32), {
+    anchor: new BMap.Size(10, 30)
+  });
+
+function setMarker2(loc) {
+    var point = new BMap.Point(loc.f_longitude, loc.f_latitude)
+    var marker = new BMap.Marker(point, {
+      icon: icon
+    });
+    map.addOverlay(marker);
+    var label = new BMap.Label(loc.f_name, {
+      offset: new BMap.Size(20, -10)
+    });
+    marker.setLabel(label);
+    alert(loc.f_name+loc.f_longitude+"&&&"+loc.f_latitude )
+    var sContent = "<h4 style='margin:0 0 0px 0;padding:0.2em 0'>" + loc.f_name + "(" + loc.f_type_name + ")</h4>" + "<p>地址:" + loc.f_addr + "<br/>记录时间："+loc.f_addtime+"<br/><a href='MobileLocus?id=" + loc.f_mobileid + "'>详细</a></p></div>";
+    var infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+    marker.addEventListener("click", function(e) {
+
+        var point = new BMap.Point(e.point.lng, e.point.lat)
+        map.centerAndZoom(point, 12); // 初始化地图,设置中心点坐标和地图级别。
+        this.openInfoWindow(infoWindow);
+        infoWindow.redraw();
+
+      // }
+    });
+}
+  function addMarker(loc) {
+    var point = new BMap.Point(loc.f_longitude, loc.f_latitude)
+    var marker = new BMap.Marker(point, {
+      icon: icon
+    });
+    map.addOverlay(marker);
+    var label = new BMap.Label(loc.f_name, {
+      offset: new BMap.Size(20, -10)
+    });
+    marker.setLabel(label);
+
+    var sContent = "<h4 style='margin:0 0 0px 0;padding:0.2em 0'>" + loc.f_name + "(" + loc.f_type_name + ")</h4>" + "<p>地址:" + loc.f_addr + "<br/><a href='/customer_view/" + loc.f_id + "'>详细资料</a>.<a href='/customer_view/" + loc.f_id + "'>拜访记录</a></p></div>";
+    var infoWindow = new BMap.InfoWindow(sContent); // 创建信息窗口对象
+    marker.addEventListener("click", function(e) {
+
+      var point = new BMap.Point(e.point.lng, e.point.lat)
+      map.centerAndZoom(point, 12); // 初始化地图,设置中心点坐标和地图级别。
+      this.openInfoWindow(infoWindow);
+      infoWindow.redraw();
+    });
+  }
+
+  $("button[name=btn_mobile]").live("click", function() {
+    ClearMarker()
+    $.get("/AjaxQuery?tag=position_last", function(data) {
+      var list = data.data
+      for(var i = 0; i < list.length; i++) {
+        var loc = list[i];
+        if(loc.latitude != "" && loc.longitude != "") {
+          setMarker2(loc)
+        }
+      }
+    }, "json")
+  })
+
+  $("button[name=btn_poi]").live("click", function() {
+    map.clearOverlays();
+    $.get("/AjaxQuery?tag=poi", function(data) {
+      var list = data.data
+      for(var i = 0; i < list.length; i++) {
+        var loc = list[i];
+        if(loc.f_latitude != "" && loc.f_longitude != "") {
+          addMarker(loc)
+        }
+      }
+    }, "json")
+  })
+
+$("#mobile_list").live("change",function(){
+    map.clearOverlays();
+         $("#mobile_list option:selected").each(function() {
+            id = $(this).val()
+             $.get("/AjaxQuery?tag=position_last_by_id&mobileid="+id,function(data){
+             var beginPoint = new BMap.Point(data.f_longitude,data.f_latitude);
+              map.centerAndZoom(beginPoint,12)
+              createMarketPoint(data,"/static/marker.png")
+
+      },"json")
+        });
+})
+function createMarketPoint(loc,img){
+
+  var pt = new BMap.Point(loc.f_longitude,loc.f_latitude);
+  var myIcon = new BMap.Icon(img,new BMap.Size(40, 40),{offset: new BMap.Size(0, -1),   imageOffset: new BMap.Size(0, 0)});
+  var marker = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
+  map.addOverlay(marker);                    // 将标注添加到地图中
+  var label = new BMap.Label(loc.f_name,{offset:new BMap.Size(20,-10)});
+  marker.setLabel(label);
+
+ var content = "<h4 style='margin:0 0 0px 0;padding:0.2em 0'>" + loc.f_name + "(" + loc.f_type_name + ")</h4>" + "<p>地址:" + loc.f_addr + "<br/>记录时间："+loc.f_addtime+"<br/><a href='MobileLocus?id=" + loc.f_mobileid + "'>详细</a></p></div>";
+
+  var infoWindow = new BMap.InfoWindow(content);
+  marker.addEventListener("click", function(e){
+
+    this.openInfoWindow(infoWindow);});
+}
+
+$("button[name=btn_save]").live("click", function() {
+    name = $("input[name=name]").val()
+    phone = $("input[name=phone]").val()
+    company = $("input[name=company]").val()
+    lat = $("input[name=lat]").val()
+    lng = $("input[name=lng]").val()
+    addr = $("input[name=addr]").val()
+    email = $("input[name=email]").val()
+    fax = $("input[name=fax]").val()
+    remark = $("#remark").val()
+    $.post("/poi", {
+      "name": name,
+      "phone": phone,
+      "company": company,
+      "lat": lat,
+      "lng": lng,
+      "addr": addr,
+      "email": email,
+      "fax": fax,
+      "remark": remark,
+      "_xsrf": _xsrf,
+      "tag": "add"
+    }, function(returnid) {
+      if(returnid == "1") {
+        $("#show_msg").show()
+        $("#show_msg").html("名称不能为空.")
+      } else if(returnid == "2") {
+        $("#myModal").modal('hide')
+      }
+    })
+
+  })
+})
+
+</script>
+{%end%}
